@@ -6,8 +6,8 @@ export const environment = {
     production: false,
     apiBaseUrl: "/api",
     keycloak:{
-        url:"https://sso.giancarlocompagno.it/auth",
-        realm:"GRUPPO 0",
+        url:"http://sso.giancarlocompagno.it/auth",
+        realm:"GRUPPO 1",
         clientId:"cfe"
   }
 };
