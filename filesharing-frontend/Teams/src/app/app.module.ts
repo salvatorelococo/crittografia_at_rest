@@ -79,7 +79,8 @@ import { PasswordDialogComponent } from './dialog/password-dialog/password-dialo
   entryComponents:[
     TeamDialogComponent,
     BucketDialogComponent,
-    FolderDialogComponent
+    FolderDialogComponent,
+    PasswordDialogComponent
   ],
   bootstrap: [AppComponent]
 })
