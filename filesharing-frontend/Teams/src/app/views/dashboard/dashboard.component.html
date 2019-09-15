@@ -23,7 +23,11 @@
   <br />
   <button *ngIf="team" (click)="openDialogBucket()" mat-mini-fab color="warn" matTooltipClass="tooltip" matTooltipPosition="left" [matTooltip]="'Crea Bucket'"><mat-icon>work</mat-icon></button>
   <br />
-  <button *ngIf="team && bucket" (click)="openDialogFolder()" mat-mini-fab color="warn" matTooltipClass="tooltip" matTooltipPosition="left" [matTooltip]="'Crea Folder'"><mat-icon>folder</mat-icon></button>
+  <button *ngIf="team && bucket" (click)="openDialogFolder()" mat-mini-fab color="warn" matTooltipClass="tooltip" matTooltipPosition="left" [matTooltip]="'Crea Cartella'"><mat-icon>folder</mat-icon></button>
+  <!-- TODO
+  <br />
+  <button *ngIf="team && bucket" (click)="openDialogPassword()" mat-mini-fab color="warn" matTooltipClass="tooltip" matTooltipPosition="left" [matTooltip]="'Carica File'"><mat-icon>cloud_upload</mat-icon></button>
+  -->
 </div>
 <button  mat-mini-fab color="warn" (click)="showMenu=!showMenu">+</button>
 </div>

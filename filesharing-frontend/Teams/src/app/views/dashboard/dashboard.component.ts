@@ -10,6 +10,9 @@ import {BucketService} from "../../services/bucket.service";
 import {FolderDialogComponent} from "../../dialog/folder-dialog/folder-dialog.component";
 import {ResourceService} from "../../services/resource.service";
 import {SYNC_TYPE, SyncService} from "../../services/sync.service";
+/* TODO: Importare in caso di inserimento del metodo openDialogPassword()
+import {PasswordDialogComponent} from "../../dialog/password-dialog/password-dialog.component";
+*/
 
 @Component({
   selector: 'app-dashboard',
@@ -84,21 +87,21 @@ export class DashboardComponent implements OnInit {
   }
 
   openDialogBucket(): void {
-    const dialogRef = this.dialog.open(BucketDialogComponent, {
-      width: '50vw',
-      data: {}
-    });
-    this.showMenu = false;
-    dialogRef.afterClosed().subscribe((result:BucketDTO) => {
-      if(result){
-        result.bucketType = "filesystem";
-        console.log(result);
-        this.bucketService.save(this.team, result).subscribe(data=>{
-            this.syncService.sendEvent(SYNC_TYPE.Bucket);
-            this.syncService.sendEvent(SYNC_TYPE.Team);
-        })
-      }
-    });
+      const dialogRef = this.dialog.open(BucketDialogComponent, {
+          width: '50vw',
+          data: {}
+      });
+      this.showMenu = false;
+      dialogRef.afterClosed().subscribe((result: BucketDTO) => {
+          if (result) {
+              result.bucketType = "filesystem";
+              console.log(result);
+              this.bucketService.save(this.team, result).subscribe(data => {
+                  this.syncService.sendEvent(SYNC_TYPE.Bucket);
+                  this.syncService.sendEvent(SYNC_TYPE.Team);
+              })
+          }
+      });
   }
 
     openDialogFolder(): void {
@@ -133,6 +136,4 @@ export class DashboardComponent implements OnInit {
             }
         });
     }
-
-
 }

@@ -1,11 +1,13 @@
 import {Directive, EventEmitter, HostBinding, HostListener, Output} from '@angular/core';
+import {PasswordDialogComponent} from "../dialog/password-dialog/password-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Directive({
   selector: '[appDragDrop]'
 })
 export class DragDropDirectiveDirective {
 
-  constructor(){}
+  constructor(public dialog: MatDialog){}
 
   @Output() onFileDropped = new EventEmitter<any>();
 
@@ -34,10 +36,21 @@ export class DragDropDirectiveDirective {
     evt.stopPropagation();
     this.background = null;
     this.opacity = '1'
-    let files = evt.dataTransfer.files;
-    if (files.length > 0) {
-      this.onFileDropped.emit(files)
+    this.openDialogPassword();
+    // TODO: Aggiornare condizione con verifica password
+    if(false) {
+      let files = evt.dataTransfer.files;
+      if (files.length > 0) {
+        this.onFileDropped.emit(files)
+      }
     }
   }
 
+  openDialogPassword(): void {
+    const dialogRef = this.dialog.open(PasswordDialogComponent, {
+      width: '50vw',
+      data: {}
+    });
+    dialogRef.afterClosed().subscribe();
+  }
 }
