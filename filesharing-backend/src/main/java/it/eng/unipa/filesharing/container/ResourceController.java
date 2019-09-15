@@ -53,11 +53,11 @@ public class ResourceController {
 	
 	@GetMapping("/{uuid}/{bucketName}/{uniqueId}")
 	public ResponseEntity<Resource> download(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@PathVariable("uniqueId") String uniqueId) {
+		//TODO: Inserire richiesta di password
 		ResourceDTO resourceDTO = teamService.getContent(uuid,bucketName,uniqueId);
 		return getResponseEntityResource(resourceDTO.getName(), resourceDTO.getContent());
 	}
-	
-	
+
 	private ResponseEntity<Resource> getResponseEntityResource(String name, byte[] body) {
 		return ResponseEntity.ok()
                 //.contentType(MediaType.parseMediaType("application/pdf"))
