@@ -20,7 +20,7 @@ export class FolderDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  addFolfer(){
+  addFolder(){
     this.dialogRef.close(this.folder);
   }
 
