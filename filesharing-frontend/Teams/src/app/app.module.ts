@@ -30,6 +30,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { FolderDialogComponent } from './dialog/folder-dialog/folder-dialog.component';
 import { FoldersComponent } from './views/folders/folders.component';
 import { MemberPipe } from './pipe/member.pipe';
+import { PasswordDialogComponent } from './dialog/password-dialog/password-dialog.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { MemberPipe } from './pipe/member.pipe';
     BucketDetailComponent,
     FolderDialogComponent,
     FoldersComponent,
-    MemberPipe
+    MemberPipe,
+    PasswordDialogComponent
   ],
     imports: [
         HttpClientModule,
