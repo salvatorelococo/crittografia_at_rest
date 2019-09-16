@@ -3,15 +3,15 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-password-dialog',
-  templateUrl: './password-dialog.component.html',
-  styleUrls: ['./password-dialog.component.scss']
+  templateUrl: './upload-dialog.component.html',
+  styleUrls: ['./upload-dialog.component.scss']
 })
-export class PasswordDialogComponent implements OnInit {
+export class UploadDialogComponent implements OnInit {
 
   password: string;
   hide = true;
 
-  constructor(public dialogRef: MatDialogRef<PasswordDialogComponent>,
+  constructor(public dialogRef: MatDialogRef<UploadDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {

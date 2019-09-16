@@ -7,8 +7,8 @@ import {SYNC_TYPE, SyncService} from "../../services/sync.service";
 import {TeamService} from "../../services/team.service";
 import {UploadProgressModel} from "../../models/UploadProgressModel";
 import {HttpEventType} from "@angular/common/http";
-import {PasswordDialogComponent} from "../../dialog/password-dialog/password-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {DownloadDialogComponent} from "../../dialog/download-dialog/download-dialog.component";
 
 class PathDescriptor{
   path: string;
@@ -100,7 +100,7 @@ export class BucketDetailComponent implements OnInit {
   }
 
   download(file: ResourceDTO){
-    const dialogRef = this.dialog.open(PasswordDialogComponent, {
+    const dialogRef = this.dialog.open(DownloadDialogComponent, {
       width: '50vw',
       data: {}
     });
@@ -109,12 +109,6 @@ export class BucketDetailComponent implements OnInit {
         this.resourceService.download(this.team, this.bucket, file.uniqueKey);
       }
     });
-
-  }
-
-  // TODO: Rimuovere metodo
-  openDialogPassword(): void {
-
   }
 
   getPathForLink(index){

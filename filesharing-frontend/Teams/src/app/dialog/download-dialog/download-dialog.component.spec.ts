@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PasswordDialogComponent } from './password-dialog.component';
+import { DownloadDialogComponent } from './download-dialog.component';
 
-describe('PasswordDialogComponent', () => {
-  let component: PasswordDialogComponent;
-  let fixture: ComponentFixture<PasswordDialogComponent>;
+describe('DownloadDialogComponent', () => {
+  let component: DownloadDialogComponent;
+  let fixture: ComponentFixture<DownloadDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PasswordDialogComponent ]
+      declarations: [ DownloadDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PasswordDialogComponent);
+    fixture = TestBed.createComponent(DownloadDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

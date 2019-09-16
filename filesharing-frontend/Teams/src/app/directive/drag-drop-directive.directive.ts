@@ -1,5 +1,5 @@
 import {Directive, EventEmitter, HostBinding, HostListener, Output} from '@angular/core';
-import {PasswordDialogComponent} from "../dialog/password-dialog/password-dialog.component";
+import {UploadDialogComponent} from "../dialog/upload-dialog/upload-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 
 @Directive({
@@ -48,7 +48,7 @@ export class DragDropDirectiveDirective {
 
   // TODO: Rimuovere metodo
   openDialogPassword(): void {
-    const dialogRef = this.dialog.open(PasswordDialogComponent, {
+    const dialogRef = this.dialog.open(UploadDialogComponent, {
       width: '50vw',
       data: {}
     });
