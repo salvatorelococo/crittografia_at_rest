@@ -8,7 +8,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class PasswordDialogComponent implements OnInit {
 
-  public password: string;
+  password: string;
+  hide = true;
 
   constructor(public dialogRef: MatDialogRef<PasswordDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -16,8 +17,12 @@ export class PasswordDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  setPassword(){
+  addWithPassword() {
     this.dialogRef.close(this.password);
+  }
+
+  addFile() {
+    this.dialogRef.close();
   }
 
 }
