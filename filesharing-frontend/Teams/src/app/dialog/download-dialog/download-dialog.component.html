@@ -3,12 +3,12 @@
         <mat-form-field class="example-full-width">
             <input matInput [type]="hide ? 'password' : 'text'" name="passwordInput" placeholder="Inserisci password (4-32 caratteri)"
                    required [(ngModel)]="password" minlength="4" maxlength="32">
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Nascondi password'" [attr.aria-pressed]="hide">
+            <button type=button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Nascondi password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
         </mat-form-field>
         <div>
-            <button [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
+            <button type=submit id="default" [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
                     (click)="download()">Scarica File</button>
         </div>
     </form>

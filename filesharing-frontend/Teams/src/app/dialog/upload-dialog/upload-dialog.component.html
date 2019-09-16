@@ -3,14 +3,14 @@
         <mat-form-field class="example-full-width">
             <input matInput [type]="hide ? 'password' : 'text'" name="passwordInput" placeholder="Inserisci password (4-32 caratteri)"
                    required [(ngModel)]="password" minlength="4" maxlength="32">
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Nascondi password'" [attr.aria-pressed]="hide">
+            <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Nascondi password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
         </mat-form-field>
         <div>
-            <button [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
+            <button type=submit [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
                     (click)="addWithPassword()">Carica File</button>
-            <button style="float: right" mat-flat-button color="secondary" (click)="addFile()">Carica senza password</button>
+            <button type=button style="float: right" mat-flat-button color="secondary" (click)="addFile()">Carica senza password</button>
             <!-- <button [disabled]="bucketForm.invalid" style="float: right" mat-flat-button color="warn">Crea Bucket</button> -->
         </div>
     </form>
