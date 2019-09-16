@@ -7,6 +7,8 @@ import {SYNC_TYPE, SyncService} from "../../services/sync.service";
 import {TeamService} from "../../services/team.service";
 import {UploadProgressModel} from "../../models/UploadProgressModel";
 import {HttpEventType} from "@angular/common/http";
+import {PasswordDialogComponent} from "../../dialog/password-dialog/password-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 class PathDescriptor{
   path: string;
@@ -20,6 +22,7 @@ class PathDescriptor{
 })
 export class BucketDetailComponent implements OnInit {
 
+  private password: string;
   public files: ResourceDTO;
   private originalResources: ResourceDTO;
   public team: string;
@@ -32,7 +35,8 @@ export class BucketDetailComponent implements OnInit {
               private bucketService: BucketService,
               private resourceService: ResourceService,
               private syncService: SyncService,
-              private router: ActivatedRoute) { }
+              private router: ActivatedRoute,
+              public dialog: MatDialog) { }
 
   ngOnInit() {
     this.router.paramMap.subscribe(params=>{
@@ -96,7 +100,21 @@ export class BucketDetailComponent implements OnInit {
   }
 
   download(file: ResourceDTO){
-    this.resourceService.download(this.team, this.bucket, file.uniqueKey);
+    const dialogRef = this.dialog.open(PasswordDialogComponent, {
+      width: '50vw',
+      data: {}
+    });
+    dialogRef.afterClosed().subscribe((result:string) => {
+      if(result == "Pippo") {
+        this.resourceService.download(this.team, this.bucket, file.uniqueKey);
+      }
+    });
+
+  }
+
+  // TODO: Rimuovere metodo
+  openDialogPassword(): void {
+
   }
 
   getPathForLink(index){

@@ -10,9 +10,6 @@ import {BucketService} from "../../services/bucket.service";
 import {FolderDialogComponent} from "../../dialog/folder-dialog/folder-dialog.component";
 import {ResourceService} from "../../services/resource.service";
 import {SYNC_TYPE, SyncService} from "../../services/sync.service";
-/* TODO: Importare in caso di inserimento del metodo openDialogPassword()
-import {PasswordDialogComponent} from "../../dialog/password-dialog/password-dialog.component";
-*/
 
 @Component({
   selector: 'app-dashboard',

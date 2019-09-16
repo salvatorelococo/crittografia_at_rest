@@ -46,11 +46,14 @@ export class DragDropDirectiveDirective {
     }
   }
 
+  // TODO: Rimuovere metodo
   openDialogPassword(): void {
     const dialogRef = this.dialog.open(PasswordDialogComponent, {
       width: '50vw',
       data: {}
     });
-    dialogRef.afterClosed().subscribe();
+    dialogRef.afterClosed().subscribe((result:string) => {
+
+      });
   }
 }
