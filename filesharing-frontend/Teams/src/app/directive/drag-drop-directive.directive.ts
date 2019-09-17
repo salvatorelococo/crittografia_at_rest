@@ -38,7 +38,7 @@ export class DragDropDirectiveDirective {
     this.opacity = '1'
     this.openDialogPassword();
     // TODO: Aggiornare condizione con verifica password
-    if(false) {
+    if(true) {
       let files = evt.dataTransfer.files;
       if (files.length > 0) {
         this.onFileDropped.emit(files)

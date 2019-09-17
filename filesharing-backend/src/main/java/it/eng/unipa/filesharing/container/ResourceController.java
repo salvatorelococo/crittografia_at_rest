@@ -43,13 +43,21 @@ public class ResourceController {
 	public void addFolder(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@RequestBody FolderDTO folderDTO) {
 		teamService.addFolder(uuid, bucketName, folderDTO.getParentUniqueId(), folderDTO.getName());
 	}
-	
+
 	@PostMapping("/addContent/{uuid}/{bucketName}")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public void addContent(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@RequestParam(value = "parentUniqueId", required = false)String parentUniqueId,@RequestParam("file") MultipartFile multipartFile) throws IOException {
-		teamService.addContent(uuid, bucketName, parentUniqueId, multipartFile.getOriginalFilename(), multipartFile.getBytes());
+
+		//parte criptaggio
+		MyAESFileEncryption aes = new MyAESFileEncryption();
+		byte [] mybytes = aes.AESEncrypt(multipartFile.getBytes());
+		//byte [] mybytes = multipartFile.getBytes();
+		//mybytes[0] = (byte)(10);
+
+
+		teamService.addContent(uuid, bucketName, parentUniqueId, multipartFile.getOriginalFilename(),mybytes);
 	}
-	
+
 	
 	@GetMapping("/{uuid}/{bucketName}/{uniqueId}")
 	public ResponseEntity<Resource> download(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@PathVariable("uniqueId") String uniqueId) {
