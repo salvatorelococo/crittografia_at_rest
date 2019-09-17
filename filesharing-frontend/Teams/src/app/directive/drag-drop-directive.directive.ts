@@ -12,7 +12,7 @@ export class DragDropDirectiveDirective {
   @Output() onFileDropped = new EventEmitter<any>();
 
   @HostBinding('style.background-color') private background;// = '#f5fcff'
-  @HostBinding('style.opacity') private opacity = '1'
+  @HostBinding('style.opacity') private opacity = '1';
 
   //Dragover listener
   @HostListener('dragover', ['$event']) onDragOver(evt) {
@@ -35,10 +35,10 @@ export class DragDropDirectiveDirective {
     evt.preventDefault();
     evt.stopPropagation();
     this.background = null;
-    this.opacity = '1'
+    this.opacity = '1';
     this.openDialogPassword();
     // TODO: Aggiornare condizione con verifica password
-    if(false) {
+    if(true) {
       let files = evt.dataTransfer.files;
       if (files.length > 0) {
         this.onFileDropped.emit(files)
@@ -46,7 +46,7 @@ export class DragDropDirectiveDirective {
     }
   }
 
-  // TODO: Rimuovere metodo
+  // TODO: Rimuovere o implementare metodo
   openDialogPassword(): void {
     const dialogRef = this.dialog.open(UploadDialogComponent, {
       width: '50vw',

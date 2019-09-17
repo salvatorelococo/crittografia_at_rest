@@ -53,12 +53,17 @@ public class Bucket {
 	
 	@Column(name = "name")
 	private String name;
-	
+
 	private String description;
 	
 	@Convert(converter = BucketTypeConverter.class)
 	private BucketType bucketType;
-	
+
+	// TODO: Aggiunto
+	@OneToMany(mappedBy = "bucket", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<File> files = new ArrayList<File>();
+
+
 	@OneToMany(mappedBy = "bucket",cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Membership> memberships = new ArrayList<Membership>();
 	
@@ -136,20 +141,23 @@ public class Bucket {
 		ResourceRepository repository = bucketType.getRepository();
 		return repository.loadBucket(this.getTeam().getUuid(), this.getName());
 	}
-	
-	
+
+	// TODO: Aggiunto
 	public ContentResource addContent(String email,String parentUniqueId,String name,byte[] content) {
 		return execute(email,(member)->{
 			if(member.isPermissionCreate()) {
 				ResourceRepository repository = bucketType.getRepository();
 				Resource parent = parentUniqueId!=null ? repository.read(getBucketResource(),parentUniqueId) : getBucketResource();
+				// TODO: Aggiunto (PROBLEMA: Il file viene in ogni caso aggiunto alla lista(?))
+				File f = new File (content,this, parentUniqueId, name);
+				this.files.add(f);
 				return repository.createContent(parent, name, content);
 			}else {
 				return null;
 			}
 		});
 	}
-	
+
 	public FolderResource addFolder(String email,String parentUniqueId,String name) {
 		return execute(email,(member)->{
 			if(member.isPermissionCreate()) {
