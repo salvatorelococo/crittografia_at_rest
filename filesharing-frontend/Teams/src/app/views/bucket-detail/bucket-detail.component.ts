@@ -7,8 +7,8 @@ import {SYNC_TYPE, SyncService} from "../../services/sync.service";
 import {TeamService} from "../../services/team.service";
 import {UploadProgressModel} from "../../models/UploadProgressModel";
 import {HttpEventType} from "@angular/common/http";
-import {MatDialog} from "@angular/material/dialog";
-import {DownloadDialogComponent} from "../../dialog/download-dialog/download-dialog.component";
+import {MatDialog} from "@angular/material/dialog"; // TODO: Aggiunto
+import {DownloadDialogComponent} from "../../dialog/download-dialog/download-dialog.component"; // TODO: Aggiunto
 
 class PathDescriptor{
   path: string;
@@ -22,7 +22,6 @@ class PathDescriptor{
 })
 export class BucketDetailComponent implements OnInit {
 
-  private password: string;
   public files: ResourceDTO;
   private originalResources: ResourceDTO;
   public team: string;
@@ -36,7 +35,7 @@ export class BucketDetailComponent implements OnInit {
               private resourceService: ResourceService,
               private syncService: SyncService,
               private router: ActivatedRoute,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog /* TODO: Aggiunto */) { }
 
   ngOnInit() {
     this.router.paramMap.subscribe(params=>{
@@ -45,7 +44,7 @@ export class BucketDetailComponent implements OnInit {
       this.bucket = params.get('bucket');
       this.loadResource();
       this.syncService.register().subscribe((type: SYNC_TYPE)=>{
-        console.log("Sync", type)
+        console.log("Sync", type);
         if(type == SYNC_TYPE.Resource){
           this.loadResource();
         }
@@ -99,21 +98,19 @@ export class BucketDetailComponent implements OnInit {
     });
   }
 
+  // TODO: Aggiunto (modificato)
   download(file: ResourceDTO){
     const dialogRef = this.dialog.open(DownloadDialogComponent, {
       width: '50vw',
       data: {}
     });
-    dialogRef.afterClosed().subscribe((result:string) => {
-      if(result == "Pippo") {
-        this.resourceService.download(this.team, this.bucket, file.uniqueKey);
-      }
+    dialogRef.afterClosed().subscribe(() => {
+      this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
     });
   }
 
   getPathForLink(index){
     return this.urlparams.slice(0,index+1).reduce((initial, item)=>{initial.push(item.path); return initial},[]).join('/');
   }
-
 
 }
