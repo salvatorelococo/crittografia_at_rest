@@ -53,9 +53,9 @@ public class AES {
         }
     }
 
-    public static void main(String[] args) {
-        byte[] crypted = AES.encrypt("Ciao".getBytes(),"pwd1");
-        byte[] decrypted = AES.decrypt(crypted,"pwd2");
-        System.out.println(new String(decrypted));
-    }
+//    public static void main(String[] args) {
+//        byte[] crypted = AES.encrypt("Ciao".getBytes(),"pwd1");
+//        byte[] decrypted = AES.decrypt(crypted,"pwd2");
+//        System.out.println(new String(decrypted));
+//    }
 }
