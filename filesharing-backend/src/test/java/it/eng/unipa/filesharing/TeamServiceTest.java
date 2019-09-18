@@ -67,7 +67,7 @@ public class TeamServiceTest {
 		teamService.addMembership(uuid, bucketName, new MembershipDTO(otherEmail1,true,true));
 		
 		ResourceDTO addContent = teamService.addContent(uuid,bucketName,null,"testina.txt","ciao".getBytes());
-		
+
 		ResourceDTO content = teamService.getContent(uuid, bucketName, addContent.getUniqueKey());
 		
 		System.out.println(content);

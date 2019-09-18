@@ -159,7 +159,14 @@ public class TeamServiceImpl implements TeamService{
 		Team team = team(uuid);
 		team.addMembership(SecurityContext.getEmail(), bucketName, membershipDTO.getEmail(), membershipDTO.isPermissionCreate(), membershipDTO.isPermissionDelete());
 	}
-	
+
+	@Override
+	public ResourceDTO addCryptedContent(UUID uuid, String bucketName,String parentUniqueId,String name,byte[] content, String hash, byte[] salt, byte[] iv) {
+		Team team = team(uuid);
+		ContentResource contentResource = team.addCryptedContent(bucketName, parentUniqueId, SecurityContext.getEmail(), name, content, hash, salt, iv);
+		return conversionService.convert(contentResource, ResourceDTO.class);
+	}
+
 	@Override
 	public ResourceDTO addContent(UUID uuid, String bucketName,String parentUniqueId,String name,byte[] content) {
 		Team team = team(uuid);

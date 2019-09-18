@@ -143,16 +143,32 @@ public class Bucket {
 	}
 
 	// TODO: Aggiunto
+    public ContentResource addCryptedContent(String email,String parentUniqueId, String name, byte[] content, String hash, byte[] salt, byte[] iv) {
+        return execute(email,(member)->{
+            if(member.isPermissionCreate()) {
+                ResourceRepository repository = bucketType.getRepository();
+                Resource parent = parentUniqueId!=null ? repository.read(getBucketResource(),parentUniqueId) : getBucketResource();
+
+                // TODO: Aggiunto (PROBLEMA: Il file viene in ogni caso aggiunto alla lista(?) e prima di essere creato)
+                File f = new File(this, parentUniqueId, name, hash, salt, iv);
+                this.files.add(f);
+
+                // TODO: Invocare funzione di criptaggio per il file prima delle creazione del contenuto.
+                // content = qualcuno.cryptFile(content, hash, iv);
+                return repository.createContent(parent, name, content);
+            } else {
+                return null;
+            }
+        });
+    }
+
 	public ContentResource addContent(String email,String parentUniqueId,String name,byte[] content) {
 		return execute(email,(member)->{
 			if(member.isPermissionCreate()) {
 				ResourceRepository repository = bucketType.getRepository();
 				Resource parent = parentUniqueId!=null ? repository.read(getBucketResource(),parentUniqueId) : getBucketResource();
-				// TODO: Aggiunto (PROBLEMA: Il file viene in ogni caso aggiunto alla lista(?))
-				File f = new File (content,this, parentUniqueId, name);
-				this.files.add(f);
 				return repository.createContent(parent, name, content);
-			}else {
+			} else {
 				return null;
 			}
 		});

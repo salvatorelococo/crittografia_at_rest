@@ -22,7 +22,7 @@ public class File {
 
     public File () {}
 
-    private File(Bucket bucket, String parentUniqueId, String name, String hash, byte[] salt, byte[] iv) {
+    public File(Bucket bucket, String parentUniqueId, String name, String hash, byte[] salt, byte[] iv) {
         this.setBucket(bucket);
         this.setParentUniqueId(parentUniqueId);
         this.setName(name);

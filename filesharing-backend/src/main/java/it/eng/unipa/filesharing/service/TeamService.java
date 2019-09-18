@@ -37,6 +37,8 @@ public interface TeamService {
 
 	ResourceDTO tree(UUID uuid, String name);
 
+	ResourceDTO addCryptedContent(UUID uuid, String bucketName,String parentUniqueId,String name,byte[] content, String hash, byte[] salt, byte[] iv );
+
 	ResourceDTO addContent(UUID uuid, String bucketName, String parentUniqueId, String name, byte[] content);
 
 	ResourceDTO addFolder(UUID uuid, String bucketName, String parentUniqueId, String name);
