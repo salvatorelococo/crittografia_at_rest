@@ -1,11 +1,21 @@
 package it.eng.unipa.filesharing.service;
 
+import java.io.*;
+import java.security.AlgorithmParameters;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
+import java.security.spec.KeySpec;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import it.eng.unipa.filesharing.dto.*;
+import it.eng.unipa.filesharing.security.AES;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
@@ -23,6 +33,11 @@ import it.eng.unipa.filesharing.resource.ContentResource;
 import it.eng.unipa.filesharing.resource.FolderResource;
 import it.eng.unipa.filesharing.service.exception.BucketNotFoundException;
 import it.eng.unipa.filesharing.service.exception.TeamNotFoundException;
+
+import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -161,9 +176,10 @@ public class TeamServiceImpl implements TeamService{
 	}
 
 	@Override
-	public ResourceDTO addCryptedContent(UUID uuid, String bucketName,String parentUniqueId,String name,byte[] content, String hash, byte[] salt, byte[] iv) {
+	public ResourceDTO addCryptedContent(UUID uuid, String bucketName,String parentUniqueId,String name,byte[] content, String password) {
 		Team team = team(uuid);
-		ContentResource contentResource = team.addCryptedContent(bucketName, parentUniqueId, SecurityContext.getEmail(), name, content, hash, salt, iv);
+		byte[] cryptedFileDTO = AES.encrypt(content, password);
+		ContentResource contentResource = team.addCryptedContent(bucketName, parentUniqueId, SecurityContext.getEmail(), name + ".crypt", cryptedFileDTO);
 		return conversionService.convert(contentResource, ResourceDTO.class);
 	}
 
@@ -186,7 +202,98 @@ public class TeamServiceImpl implements TeamService{
 		
 		Team team = team(uuid);
 		ContentResource contentResource = team.getContent(SecurityContext.getEmail(),bucketName,uniqueId);
-		return (ResourceDTO)conversionService.convert(contentResource,TypeDescriptor.valueOf(ContentResource.class), TypeDescriptor.valueOf(ResourceDTO.class));
+		ResourceDTO resourceDTO = (ResourceDTO)conversionService.convert(contentResource,TypeDescriptor.valueOf(ContentResource.class), TypeDescriptor.valueOf(ResourceDTO.class));
+		//		byte[]  decryptedContent = AES.decrypt(contentResource.getContent(), password);
+		//		resourceDTO.setContent(decryptedContent);
+		//		String[] splitted = resourceDTO.getName().split("\\.");
+		// 		StringUtils.join(splitted,".")
+		// 		resourceDTO.setName(fileNameWithoutCrypt);
+		return resourceDTO;
+	}
+
+	private CryptedFileDTO cryptFile(byte[] toCrypt, String password){
+		try {
+		//byte[] myBytes = multipartFile.getBytes();
+		//File nomeFile = this.convert(multipartFile);
+
+
+		//FileInputStream inFile = new FileInputStream(nomeFile);
+
+		InputStream inFile = new ByteArrayInputStream(toCrypt);
+
+		// encrypted file
+		ByteArrayOutputStream outFile = new ByteArrayOutputStream();
+
+		// password to encrypt the file
+		// passata come parametro
+		// password, iv and salt should be transferred to the other end
+		// in a secure manner
+
+		// salt is used for encoding
+		// writing it to a file
+		// salt should be transferred to the recipient securely
+		// for decryption
+
+
+		byte[] salt = new byte[8];
+		SecureRandom secureRandom = new SecureRandom();
+		secureRandom.nextBytes(salt);
+//		FileOutputStream saltOutFile = new FileOutputStream("salt.enc");
+//		saltOutFile.write(salt);
+//		saltOutFile.close();
+
+		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+		KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 65536,
+				256);
+		SecretKey secretKey = factory.generateSecret(keySpec);
+
+
+		byte[] hash = secretKey.getEncoded();
+		// Salva key e algoritmo
+		SecretKey secret = new SecretKeySpec(secretKey.getEncoded(), "AES");
+
+		//
+		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, secret);
+		AlgorithmParameters params = cipher.getParameters();
+
+		// iv adds randomness to the text and just makes the mechanism more
+		// secure
+		// used while initializing the cipher
+		// file to store the iv
+
+
+//		FileOutputStream ivOutFile = new FileOutputStream("iv.enc");
+
+			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+
+//		ivOutFile.write(iv);
+//		ivOutFile.close();
+
+		//file encryption
+		byte[] input = new byte[64];
+		int bytesRead;
+
+		while ((bytesRead = inFile.read(input)) != -1) {
+			byte[] output = cipher.update(input, 0, bytesRead);
+			if (output != null)
+				outFile.write(output);
+		}
+
+		byte[] output = cipher.doFinal();
+		if (output != null)
+			outFile.write(output);
+
+		inFile.close();
+		outFile.flush();
+		outFile.close();
+
+		System.out.println("File Encrypted.");
+		return new CryptedFileDTO(outFile.toByteArray(), hash, salt, iv);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 	
 }

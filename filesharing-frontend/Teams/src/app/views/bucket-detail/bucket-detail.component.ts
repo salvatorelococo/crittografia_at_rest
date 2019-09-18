@@ -8,7 +8,8 @@ import {TeamService} from "../../services/team.service";
 import {UploadProgressModel} from "../../models/UploadProgressModel";
 import {HttpEventType} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog"; // TODO: Aggiunto
-import {DownloadDialogComponent} from "../../dialog/download-dialog/download-dialog.component"; // TODO: Aggiunto
+import {DownloadDialogComponent} from "../../dialog/download-dialog/download-dialog.component";
+import {UploadDialogComponent} from "../../dialog/upload-dialog/upload-dialog.component"; // TODO: Aggiunto
 
 class PathDescriptor{
   path: string;
@@ -88,7 +89,17 @@ export class BucketDetailComponent implements OnInit {
   }
 
   uploadFileEvent(file: File){
-    this.resourceService.addContent(this.team, this.bucket, this.urlparams.length>0?this.urlparams[this.urlparams.length-1].path:null, file).subscribe((data: UploadProgressModel)=>{
+      const dialogRef = this.dialog.open(UploadDialogComponent, {
+        width: '50vw',
+        data: {}
+      });
+      dialogRef.afterClosed().subscribe((password:string) => {
+        this.uploadFile(file, password);
+      });
+  }
+
+  private uploadFile(file: File, password: string = null){
+    this.resourceService.addContent(this.team, this.bucket, this.urlparams.length>0?this.urlparams[this.urlparams.length-1].path:null, file, password).subscribe((data: UploadProgressModel)=>{
       console.log(data);
       if(data.status == HttpEventType.Response.toString()) {
         this.syncService.sendEvent(SYNC_TYPE.Resource);
@@ -100,17 +111,31 @@ export class BucketDetailComponent implements OnInit {
 
   // TODO: Aggiunto (modificato)
   download(file: ResourceDTO){
+      this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
+  }
+
+  downloadCrypt(file: ResourceDTO){
     const dialogRef = this.dialog.open(DownloadDialogComponent, {
       width: '50vw',
       data: {}
     });
-    dialogRef.afterClosed().subscribe(() => {
-      this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
+    dialogRef.afterClosed().subscribe((password: string) => {
+      this.resourceService.download(this.team, this.bucket, file.uniqueKey).subscribe(()=>{},
+          (error) => {
+
+          }); //Originale
     });
   }
 
   getPathForLink(index){
     return this.urlparams.slice(0,index+1).reduce((initial, item)=>{initial.push(item.path); return initial},[]).join('/');
   }
+
+
+
+// TODO: Rimuovere o implementare metodo
+openDialogPassword(f): void {
+
+}
 
 }

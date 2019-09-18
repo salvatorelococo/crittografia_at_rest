@@ -1,9 +1,16 @@
 package it.eng.unipa.filesharing.container;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.security.AlgorithmParameters;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
+import java.security.spec.KeySpec;
 import java.util.UUID;
 
+import org.assertj.core.util.Files;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -23,6 +30,11 @@ import org.springframework.http.HttpHeaders;
 import it.eng.unipa.filesharing.dto.FolderDTO;
 import it.eng.unipa.filesharing.dto.ResourceDTO;
 import it.eng.unipa.filesharing.service.TeamService;
+
+import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 @RestController
 @RequestMapping("/resource")
@@ -44,24 +56,37 @@ public class ResourceController {
 		teamService.addFolder(uuid, bucketName, folderDTO.getParentUniqueId(), folderDTO.getName());
 	}
 
+//	public static File convert(MultipartFile file) throws IOException {
+//		File convFile = new File(file.getOriginalFilename());
+//		convFile.createNewFile();
+//		FileOutputStream fos = new FileOutputStream(convFile);
+//		fos.write(file.getBytes());
+//		fos.close();
+//		return convFile;
+//	}
+
+	@PostMapping("/addContent/{uuid}/{bucketName}")
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public void addContent(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@RequestParam(value = "parentUniqueId", required = false)String parentUniqueId,@RequestParam("file") MultipartFile multipartFile, @RequestParam(value = "password", required = false) String password) throws IOException{
+		if(password == null){
+			teamService.addContent(uuid, bucketName, parentUniqueId, multipartFile.getOriginalFilename(), multipartFile.getBytes());
+		}else{
+			teamService.addCryptedContent(uuid, bucketName, parentUniqueId, multipartFile.getOriginalFilename(), multipartFile.getBytes(), password);
+		}
+
+	}
+
+	/*
 	@PostMapping("/addContent/{uuid}/{bucketName}")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public void addContent(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@RequestParam(value = "parentUniqueId", required = false)String parentUniqueId,@RequestParam("file") MultipartFile multipartFile) throws IOException {
-
-		//parte criptaggio
-		MyAESFileEncryption aes = new MyAESFileEncryption();
-		byte [] mybytes = aes.AESEncrypt(multipartFile.getBytes());
-		//byte [] mybytes = multipartFile.getBytes();
-		//mybytes[0] = (byte)(10);
-
-
-		teamService.addContent(uuid, bucketName, parentUniqueId, multipartFile.getOriginalFilename(),mybytes);
+		teamService.addContent(uuid, bucketName, parentUniqueId, multipartFile.getOriginalFilename(), multipartFile.getBytes());
 	}
+	 */
 
-	
-	@GetMapping("/{uuid}/{bucketName}/{uniqueId}")
-	public ResponseEntity<Resource> download(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@PathVariable("uniqueId") String uniqueId) {
-		//TODO: Inserire richiesta di password
+	@PostMapping("/{uuid}/{bucketName}/{uniqueId}")
+	public ResponseEntity<Resource> download(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@PathVariable("uniqueId") String uniqueId /**, @RequestBody PasswordDTO passwordDTO**/) {
+		//TODO: se nell'oggetto PasswordDTO è presente la password allora chiamo getCryptedContent altrimenti getContent
 		ResourceDTO resourceDTO = teamService.getContent(uuid,bucketName,uniqueId);
 		return getResponseEntityResource(resourceDTO.getName(), resourceDTO.getContent());
 	}

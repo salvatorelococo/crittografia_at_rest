@@ -7,12 +7,14 @@
         <div style="position:absolute; width: 100%; height: 100%">
             <div  class="files-list d-flex" *ngFor="let file of files?.childs; let i= index">
                 <div *ngIf="file.type == 'CONTENT'" class="file-list-item">
-                    <p (click)="download(file)" class="flex-1"><mat-icon>insert_drive_file</mat-icon> {{ file.name }} </p>
-                    <button class="delete-file" (click)="download(file)">
+                    <p (click)="download(file)" class="flex-1">
+                        <mat-icon>insert_drive_file</mat-icon>
+                        {{ file.name | extensionCrypt }} </p>
+                    <button *ngIf="file.name == (file.name | extensionCrypt)" class="delete-file" (click)="download(file)">
                         <mat-icon>cloud_download</mat-icon>
                     </button>
-                    <button class="delete-file" (click)="deleteAttachment(i)">
-                        <mat-icon>delete</mat-icon>
+                    <button *ngIf="file.name != (file.name | extensionCrypt)" class="delete-file" (click)="downloadCrypt(file)">
+                        <mat-icon>lock</mat-icon>
                     </button>
                 </div>
                 <div *ngIf="file.type == 'FOLDER'" class="file-list-item">

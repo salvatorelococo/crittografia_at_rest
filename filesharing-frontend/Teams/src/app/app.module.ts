@@ -32,6 +32,7 @@ import { FoldersComponent } from './views/folders/folders.component';
 import { MemberPipe } from './pipe/member.pipe';
 import { UploadDialogComponent } from './dialog/upload-dialog/upload-dialog.component';
 import { DownloadDialogComponent } from './dialog/download-dialog/download-dialog.component';
+import { ExtensionCryptPipe } from './pipe/extension-crypt.pipe';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { DownloadDialogComponent } from './dialog/download-dialog/download-dialo
     FoldersComponent,
     MemberPipe,
     UploadDialogComponent,
-    DownloadDialogComponent
+    DownloadDialogComponent,
+    ExtensionCryptPipe
   ],
     imports: [
         HttpClientModule,

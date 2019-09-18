@@ -7,7 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 })
 export class DragDropDirectiveDirective {
 
-  constructor(public dialog: MatDialog){}
+  constructor(){}
 
   @Output() onFileDropped = new EventEmitter<any>();
 
@@ -36,24 +36,12 @@ export class DragDropDirectiveDirective {
     evt.stopPropagation();
     this.background = null;
     this.opacity = '1';
-    this.openDialogPassword();
-    // TODO: Aggiornare condizione con verifica password
-    if(true) {
       let files = evt.dataTransfer.files;
       if (files.length > 0) {
-        this.onFileDropped.emit(files)
+          this.onFileDropped.emit(files)
       }
-    }
+
   }
 
-  // TODO: Rimuovere o implementare metodo
-  openDialogPassword(): void {
-    const dialogRef = this.dialog.open(UploadDialogComponent, {
-      width: '50vw',
-      data: {}
-    });
-    dialogRef.afterClosed().subscribe((result:string) => {
 
-      });
-  }
 }

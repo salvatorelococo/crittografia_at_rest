@@ -16,13 +16,13 @@ public class File {
 
     private String parentUniqueId;
     private String name;
-    private String hash;
+    private byte[] hash;
     private byte[] salt;
     private byte[] iv;
 
     public File () {}
 
-    public File(Bucket bucket, String parentUniqueId, String name, String hash, byte[] salt, byte[] iv) {
+    public File(Bucket bucket, String parentUniqueId, String name, byte[] hash, byte[] salt, byte[] iv) {
         this.setBucket(bucket);
         this.setParentUniqueId(parentUniqueId);
         this.setName(name);
@@ -63,11 +63,12 @@ public class File {
     public void setName(String name) {
         this.name = name;
     }
-    public String getHash() {
+
+    public byte[] getHash() {
         return hash;
     }
 
-    public void setHash(String hash) {
+    public void setHash(byte[] hash) {
         this.hash = hash;
     }
 

@@ -23,12 +23,12 @@ export class ResourceService implements UploadService{
     return this.httpClient.post(this.baseUrl+'/addFolder/'+uuid+'/'+bucket, folder);
   }
 
-  public addContent(uuid: string, bucketName: string, parentUniqueId: string, file: File){
-    return this.upload(this.baseUrl+'/addContent/'+uuid+'/'+bucketName, {parentUniqueId:parentUniqueId, file: file});
+  public addContent(uuid: string, bucketName: string, parentUniqueId: string, file: File, password: string = null){
+    return this.upload(this.baseUrl+'/addContent/'+uuid+'/'+bucketName, {parentUniqueId:parentUniqueId, file: file, password: password});
   }
 
   public download(uuid: string, bucketName: string, uniqueId: string){
-    let reg = this.httpClient.get(this.baseUrl+'/'+uuid+'/'+bucketName+'/'+uniqueId, {responseType: 'arraybuffer', observe: 'response'}).pipe(share());
+    let reg = this.httpClient.post(this.baseUrl+'/'+uuid+'/'+bucketName+'/'+uniqueId, {}, {responseType: 'arraybuffer', observe: 'response'}).pipe(share());
     reg.subscribe(res => {
       return this.downLoadFile(res);
     });
