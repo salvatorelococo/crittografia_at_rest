@@ -5,9 +5,10 @@ import javax.persistence.*;
 @Entity
 @Table (uniqueConstraints=@UniqueConstraint(columnNames={"parentUniqueId", "name"}))
 public class File {
-    @Lob
     @Id
-    private byte[] hash;
+    @SequenceGenerator(name="file_seq", initialValue=1, allocationSize=1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="file_seq")
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "bucketId")
@@ -15,37 +16,28 @@ public class File {
 
     private String parentUniqueId;
     private String name;
-    private boolean crypted;
-    private String password;
+    private String hash;
+    private byte[] salt;
+    private byte[] iv;
 
     public File () {}
 
-    // Costruttore File senza password
-    public File (byte[] hash, Bucket bucket, String parentUniqueId, String name) {
-        this(hash, bucket, parentUniqueId, name, false, null);
-    }
-
-    // Costruttore File con password
-    public File (byte[] hash, Bucket bucket, String parentUniqueId, String name, String password) {
-        this(hash, bucket, parentUniqueId, name, true, password);
-    }
-
-    // Costruttore generale
-    private File(byte[] hash, Bucket bucket, String parentUniqueId, String name, boolean crypted, String password) {
-        this.setHash(hash);
+    private File(Bucket bucket, String parentUniqueId, String name, String hash, byte[] salt, byte[] iv) {
         this.setBucket(bucket);
         this.setParentUniqueId(parentUniqueId);
         this.setName(name);
-        this.setCrypted(crypted);
-        this.setPassword(password);
+        this.setHash(hash);
+        this.setSalt(salt);
+        this.setIv(iv);
     }
 
-    public byte[] getHash() {
-        return hash;
+
+    public Long getId() {
+        return id;
     }
 
-    private void setHash(byte[] hash) {
-        this.hash = hash;
+    private void setId(Long id) {
+        this.id = id;
     }
 
     public Bucket getBucket() {
@@ -56,6 +48,14 @@ public class File {
         this.bucket = bucket;
     }
 
+    public String getParentUniqueId() {
+        return parentUniqueId;
+    }
+
+    public void setParentUniqueId(String parentUniqueId) {
+        this.parentUniqueId = parentUniqueId;
+    }
+
     public String getName() {
         return name;
     }
@@ -63,29 +63,27 @@ public class File {
     public void setName(String name) {
         this.name = name;
     }
-
-    public boolean isCrypted() {
-        return crypted;
+    public String getHash() {
+        return hash;
     }
 
-    private void setCrypted(boolean crypted) {
-        this.crypted = crypted;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
-    public String getPassword() {
-        return password;
+    public byte[] getSalt() {
+        return salt;
     }
 
-    private void setPassword(String password) {
-        this.password = password;
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
     }
 
-    public String getParentUniqueId() {
-        return parentUniqueId;
+    public byte[] getIv() {
+        return iv;
     }
 
-    private void setParentUniqueId(String parentUniqueId) {
-        this.parentUniqueId = parentUniqueId;
+    public void setIv(byte[] iv) {
+        this.iv = iv;
     }
-
 }
