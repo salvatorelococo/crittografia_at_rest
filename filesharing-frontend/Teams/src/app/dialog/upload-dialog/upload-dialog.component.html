@@ -2,8 +2,8 @@
 <mat-dialog-content>
     <form class="form"  #bucketForm="ngForm">
         <mat-form-field class="example-full-width">
-            <input matInput [type]="hide ? 'password' : 'text'" name="passwordInput" placeholder="Inserisci password (4-32 caratteri)"
-                   required [(ngModel)]="password" minlength="4" maxlength="32">
+            <input matInput [type]="hide ? 'password' : 'text'" name="passwordInput" placeholder="Inserisci password (8-32 caratteri)"
+                   required [(ngModel)]="password" minlength="8" maxlength="32">
             <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Nascondi password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
