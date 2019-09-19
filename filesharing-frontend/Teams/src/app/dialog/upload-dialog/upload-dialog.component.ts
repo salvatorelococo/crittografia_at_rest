@@ -9,12 +9,16 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 export class UploadDialogComponent implements OnInit {
 
   password: string;
-  hide = true;
+  showDetails: boolean = false;
+
+  ngOnInit() {
+  }
 
   constructor(public dialogRef: MatDialogRef<UploadDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-  ngOnInit() {
+  onStrengthChanged(strength: number) {
+    console.log('password strength = ', strength);
   }
 
   addWithPassword() {

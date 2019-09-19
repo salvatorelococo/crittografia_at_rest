@@ -94,20 +94,53 @@ export class BucketDetailComponent implements OnInit {
         data: {}
       });
       dialogRef.afterClosed().subscribe((password:string) => {
-        this.uploadFile(file, password);
+        this.uploadFile(file, password)/*.subscribe(()=>{},
+            (error) => {
+
+            }); //Originale*/
       });
   }
 
+
   private uploadFile(file: File, password: string = null){
-    this.resourceService.addContent(this.team, this.bucket, this.urlparams.length>0?this.urlparams[this.urlparams.length-1].path:null, file, password).subscribe((data: UploadProgressModel)=>{
+    this.resourceService.addContent(this.team, this.bucket, this.urlparams.length>0?this.urlparams[this.urlparams.length-1].path:null,
+        file, password).subscribe((data: UploadProgressModel)=>{
       console.log(data);
       if(data.status == HttpEventType.Response.toString()) {
         this.syncService.sendEvent(SYNC_TYPE.Resource);
       }else{
         //upload progress
       }
+    }, (error)=>{
     });
   }
+
+  // r(function(){
+  //   // put all that pesky code here
+  // });
+  // function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
+
+  // r(){
+  //   if(/in/.test(document.readyState)) {
+  //     setTimeout('r('+')',9)
+  //   }
+  //   else {
+  //     this._snackBar.open('Errore nel caricamento del file!', 'error', {
+  //       duration: 2000,
+  //     })
+  //   }
+  // }
+
+  // private uploadFile(file: File, password: string = null){
+  //   this.resourceService.addContent(this.team, this.bucket, this.urlparams.length>0?this.urlparams[this.urlparams.length-1].path:null, file, password).subscribe((data: UploadProgressModel)=>{
+  //     console.log(data);
+  //     if(data.status == HttpEventType.Response.toString()) {
+  //       this.syncService.sendEvent(SYNC_TYPE.Resource);
+  //     }else{
+  //       //upload progress
+  //     }
+  //   });
+  // }
 
   // TODO: Aggiunto (modificato)
   download(file: ResourceDTO){
