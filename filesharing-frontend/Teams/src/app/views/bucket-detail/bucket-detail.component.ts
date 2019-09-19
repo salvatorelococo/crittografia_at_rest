@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {BucketService} from "../../services/bucket.service";
 import {ActivatedRoute, UrlSegment} from "@angular/router";
 import {ResourceDTO, TeamDTO} from "../../models/models";
@@ -10,6 +10,7 @@ import {HttpEventType} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {DownloadDialogComponent} from "../../dialog/download-dialog/download-dialog.component";
 import {UploadDialogComponent} from "../../dialog/upload-dialog/upload-dialog.component";
+import {MatSnackBar, MatSnackBarConfig} from "@angular/material/snack-bar";
 
 class PathDescriptor{
   path: string;
@@ -19,7 +20,8 @@ class PathDescriptor{
 @Component({
   selector: 'app-bucket-detail',
   templateUrl: './bucket-detail.component.html',
-  styleUrls: ['./bucket-detail.component.scss']
+  styleUrls: ['./bucket-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class BucketDetailComponent implements OnInit {
 
@@ -36,17 +38,19 @@ export class BucketDetailComponent implements OnInit {
               private resourceService: ResourceService,
               private syncService: SyncService,
               private router: ActivatedRoute,
-              public dialog: MatDialog /* TODO: Aggiunto */) { }
+              public snackbar: MatSnackBar,
+              public dialog: MatDialog) {
+  }
 
   ngOnInit() {
-    this.router.paramMap.subscribe(params=>{
+    this.router.paramMap.subscribe(params => {
       console.log("ROUTE PARAMS");
       this.team = params.get('team');
       this.bucket = params.get('bucket');
       this.loadResource();
-      this.syncService.register().subscribe((type: SYNC_TYPE)=>{
+      this.syncService.register().subscribe((type: SYNC_TYPE) => {
         console.log("Sync", type);
-        if(type == SYNC_TYPE.Resource){
+        if (type == SYNC_TYPE.Resource) {
           this.loadResource();
         }
       });
@@ -59,28 +63,30 @@ export class BucketDetailComponent implements OnInit {
 
   }
 
-  loadResource(){
+  loadResource() {
     this.teamDTO = this.teamService.getTeamByUUID(this.team);
-    this.resourceService.get(this.team, this.bucket).subscribe(data =>{
+    this.resourceService.get(this.team, this.bucket).subscribe(data => {
       this.originalResources = data;
       this.navigateFolder(data);
     });
   }
 
-  private navigateFolder(data: ResourceDTO){
+  private navigateFolder(data: ResourceDTO) {
     this.folderList = [];
-    if(this.urlparams && this.urlparams.length > 0 && data) {
+    if (this.urlparams && this.urlparams.length > 0 && data) {
       let find = data;
       for (let folder of this.urlparams) {
-        find = find.childs.find(x=>{return x.uniqueKey == folder.path});
-        if(find) {
+        find = find.childs.find(x => {
+          return x.uniqueKey == folder.path
+        });
+        if (find) {
           this.folderList.push({path: find.name, uniqueId: folder.path});
-        }else{
-          console.log("non ho trovato la folder "+folder, find);
+        } else {
+          console.log("non ho trovato la folder " + folder, find);
         }
       }
       this.files = find;
-    }else{
+    } else {
       this.files = data;
     }
   }
@@ -88,87 +94,62 @@ export class BucketDetailComponent implements OnInit {
   deleteAttachment(index) {
   }
 
-  uploadFileEvent(file: File){
-      const dialogRef = this.dialog.open(UploadDialogComponent, {
-        width: '50vw',
-        data: {}
-      });
-      dialogRef.afterClosed().subscribe((password:string) => {
-        this.uploadFile(file, password)/*.subscribe(()=>{},
-            (error) => {
-
-            }); //Originale*/
-      });
-  }
-
-
-  private uploadFile(file: File, password: string = null){
-    this.resourceService.addContent(this.team, this.bucket, this.urlparams.length>0?this.urlparams[this.urlparams.length-1].path:null,
-        file, password).subscribe((data: UploadProgressModel)=>{
-      console.log(data);
-      if(data.status == HttpEventType.Response.toString()) {
-        this.syncService.sendEvent(SYNC_TYPE.Resource);
-      }else{
-        //upload progress
-      }
-    }, (error)=>{
+  uploadFileEvent(file: File) {
+    const dialogRef = this.dialog.open(UploadDialogComponent, {
+      width: '50vw',
+      data: {}
+    });
+    dialogRef.afterClosed().subscribe((password: string) => {
+      this.uploadFile(file, password);
     });
   }
 
-  // r(function(){
-  //   // put all that pesky code here
-  // });
-  // function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
-
-  // r(){
-  //   if(/in/.test(document.readyState)) {
-  //     setTimeout('r('+')',9)
-  //   }
-  //   else {
-  //     this._snackBar.open('Errore nel caricamento del file!', 'error', {
-  //       duration: 2000,
-  //     })
-  //   }
-  // }
-
-  // private uploadFile(file: File, password: string = null){
-  //   this.resourceService.addContent(this.team, this.bucket, this.urlparams.length>0?this.urlparams[this.urlparams.length-1].path:null, file, password).subscribe((data: UploadProgressModel)=>{
-  //     console.log(data);
-  //     if(data.status == HttpEventType.Response.toString()) {
-  //       this.syncService.sendEvent(SYNC_TYPE.Resource);
-  //     }else{
-  //       //upload progress
-  //     }
-  //   });
-  // }
-
-  // TODO: Aggiunto (modificato)
-  download(file: ResourceDTO){
-      this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
+  openSnackBar(message: string, action: string = null) {
+    let config = new MatSnackBarConfig();
+    config.verticalPosition = "bottom";
+    config.horizontalPosition = "center";
+    config.duration = 2000;
+    this.snackbar.open(message, action ? action : undefined, config);
   }
 
-  downloadCrypt(file: ResourceDTO){
+  private uploadFile(file: File, password: string = null) {
+    this.resourceService.addContent(this.team, this.bucket, this.urlparams.length > 0 ? this.urlparams[this.urlparams.length - 1].path : null, file, password).subscribe((data: UploadProgressModel) => {
+          console.log(data);
+          if (data.status == HttpEventType.Response.toString()) {
+            console.log('Sono nell\'if');
+            this.syncService.sendEvent(SYNC_TYPE.Resource);
+          } else {
+            console.log('Sono nell\'else');
+          }
+        },
+        (error) => {
+          this.openSnackBar('Errore nel caricamento del file!', 'Riprova');
+        });
+  }
+
+  download(file: ResourceDTO) {
+    this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
+  }
+
+  // TODO: Implementare metodo con download file crittografato.
+  downloadCrypt(file: ResourceDTO) {
     const dialogRef = this.dialog.open(DownloadDialogComponent, {
       width: '50vw',
       data: {}
     });
     dialogRef.afterClosed().subscribe((password: string) => {
-      this.resourceService.download(this.team, this.bucket, file.uniqueKey/*, password*/).subscribe(()=>{},
+      this.resourceService.download(this.team, this.bucket, file.uniqueKey/*, password*/).subscribe(() => {
+          },
           (error) => {
-
+            this.openSnackBar('Errore nel download: Password errata!', 'Riprova');
           }); //Originale
     });
   }
 
-  getPathForLink(index){
-    return this.urlparams.slice(0,index+1).reduce((initial, item)=>{initial.push(item.path); return initial},[]).join('/');
+  getPathForLink(index) {
+    return this.urlparams.slice(0, index + 1).reduce((initial, item) => {
+      initial.push(item.path);
+      return initial
+    }, []).join('/');
   }
-
-
-
-// TODO: Rimuovere o implementare metodo
-openDialogPassword(f): void {
-
-}
-
 }

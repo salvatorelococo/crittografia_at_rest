@@ -34,6 +34,7 @@ import { UploadDialogComponent } from './dialog/upload-dialog/upload-dialog.comp
 import { DownloadDialogComponent } from './dialog/download-dialog/download-dialog.component';
 import { ExtensionCryptPipe } from './pipe/extension-crypt.pipe';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { MatPasswordStrengthModule } from '@angular-material-extensions/password
         KeycloakAngularModule,
         _MatMenuDirectivesModule,
         MatMenuModule,
-        MatPasswordStrengthModule.forRoot()
+        MatPasswordStrengthModule.forRoot(),
+        MatSnackBarModule/**/
     ],
   providers:  [    {
     provide: APP_INITIALIZER,
@@ -89,6 +91,9 @@ import { MatPasswordStrengthModule } from '@angular-material-extensions/password
     UploadDialogComponent,
     DownloadDialogComponent
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+      AppComponent,
+      BucketDetailComponent/**/
+  ]
 })
 export class AppModule { }
