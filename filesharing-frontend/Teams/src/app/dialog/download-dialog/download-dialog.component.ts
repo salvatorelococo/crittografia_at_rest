@@ -18,7 +18,6 @@ export class DownloadDialogComponent implements OnInit {
   }
 
   download() {
-    // TODO: Validazione della password e chiusura della schermata solo se la password è corretta.
     this.dialogRef.close(this.password);
   }
 

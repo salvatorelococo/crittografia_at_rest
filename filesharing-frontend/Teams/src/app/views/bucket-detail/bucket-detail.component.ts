@@ -7,9 +7,9 @@ import {SYNC_TYPE, SyncService} from "../../services/sync.service";
 import {TeamService} from "../../services/team.service";
 import {UploadProgressModel} from "../../models/UploadProgressModel";
 import {HttpEventType} from "@angular/common/http";
-import {MatDialog} from "@angular/material/dialog"; // TODO: Aggiunto
+import {MatDialog} from "@angular/material/dialog";
 import {DownloadDialogComponent} from "../../dialog/download-dialog/download-dialog.component";
-import {UploadDialogComponent} from "../../dialog/upload-dialog/upload-dialog.component"; // TODO: Aggiunto
+import {UploadDialogComponent} from "../../dialog/upload-dialog/upload-dialog.component";
 
 class PathDescriptor{
   path: string;
@@ -120,7 +120,7 @@ export class BucketDetailComponent implements OnInit {
       data: {}
     });
     dialogRef.afterClosed().subscribe((password: string) => {
-      this.resourceService.download(this.team, this.bucket, file.uniqueKey).subscribe(()=>{},
+      this.resourceService.download(this.team, this.bucket, file.uniqueKey/*, password*/).subscribe(()=>{},
           (error) => {
 
           }); //Originale
