@@ -8,6 +8,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -202,14 +203,14 @@ public class TeamServiceImpl implements TeamService{
 		Team team = team(uuid);
 		ContentResource contentResource = team.getContent(SecurityContext.getEmail(),bucketName,uniqueId);
 		ResourceDTO resourceDTO = (ResourceDTO)conversionService.convert(contentResource,TypeDescriptor.valueOf(ContentResource.class), TypeDescriptor.valueOf(ResourceDTO.class));
-		// Decrypting
+		// Il viene decrittografato.
 		byte[]  decryptedContent = AES.decrypt(contentResource.getContent(), password);
 		resourceDTO.setContent(decryptedContent);
 
-		// TODO: I file criptati contenti ".crypt" all'interno del nome vengono scaricati senza di esso nel nome finale.
-		String fileNameWithoutCrypt = resourceDTO.getName().replace(".crypt", "");
-//		String[] splitted = resourceDTO.getName().split("\\.");
-//		String fileNameWithoutCrypt = StringUtils.join(splitted,".");
+		// Toglie .crypt dal file che è stato decriptato.
+		String[] splitted = resourceDTO.getName().split("\\.");
+		String[] splittedWithoutCrypt = Arrays.copyOfRange(splitted, 0, splitted.length - 1);
+		String fileNameWithoutCrypt = StringUtils.join(splittedWithoutCrypt,".");
 		resourceDTO.setName(fileNameWithoutCrypt);
 
 		return resourceDTO;
