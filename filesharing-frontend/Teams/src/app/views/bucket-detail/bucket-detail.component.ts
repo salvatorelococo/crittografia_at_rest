@@ -97,8 +97,13 @@ export class BucketDetailComponent implements OnInit {
         width: '50vw',
         data: {}
       });
-      dialogRef.afterClosed().subscribe((password:string) => {
-        this.uploadFile(file, password);
+      dialogRef.afterClosed().subscribe((password) => {
+        if(typeof password == 'number') {
+          this.uploadFile(file, null);
+        }
+        else if(password != null){
+          this.uploadFile(file, password);
+        }
       });
   }
 

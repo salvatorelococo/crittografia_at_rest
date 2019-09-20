@@ -23,6 +23,10 @@ export interface MembershipDTO {
     permissionCreate: boolean;
     permissionDelete: boolean;
 }
+// TODO: Aggiunto
+export interface PasswordDTO {
+    password: string;
+}
 
 export interface ResourceDTO {
     type: TYPE;

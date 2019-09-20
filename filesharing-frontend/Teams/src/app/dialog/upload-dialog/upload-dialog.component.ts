@@ -26,7 +26,6 @@ export class UploadDialogComponent implements OnInit {
   }
 
   addFile() {
-    this.dialogRef.close();
+    this.dialogRef.close(-1);
   }
-
 }
