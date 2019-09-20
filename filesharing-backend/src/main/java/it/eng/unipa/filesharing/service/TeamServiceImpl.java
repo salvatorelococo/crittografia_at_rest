@@ -179,7 +179,7 @@ public class TeamServiceImpl implements TeamService{
 	public ResourceDTO addCryptedContent(UUID uuid, String bucketName,String parentUniqueId,String name,byte[] content, String password) {
 		Team team = team(uuid);
 		byte[] cryptedFileDTO = AES.encrypt(content, password);
-		ContentResource contentResource = team.addCryptedContent(bucketName, parentUniqueId, SecurityContext.getEmail(), name + ".crypt", cryptedFileDTO);
+		ContentResource contentResource = team.addContent(bucketName, parentUniqueId, SecurityContext.getEmail(), name + ".crypt", cryptedFileDTO);
 		return conversionService.convert(contentResource, ResourceDTO.class);
 	}
 

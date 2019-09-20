@@ -217,10 +217,10 @@ public class Team {
 		return getBuckets().stream().filter((u)->u.getName().equals(bucketName)).findFirst().orElseThrow(()->new BucketNotFoundException(this.getUuid(), bucketName));
 	}
 	
-	public ContentResource addCryptedContent(String bucketName,String parentUniqueId,String email,String name,byte[] content) {
-		Bucket bucket = bucket(bucketName);
-		return bucket.addCryptedContent(email, parentUniqueId, name, content);
-	}
+//	public ContentResource addCryptedContent(String bucketName,String parentUniqueId,String email,String name,byte[] content) {
+//		Bucket bucket = bucket(bucketName);
+//		return bucket.addCryptedContent(email, parentUniqueId, name, content);
+//	}
 
 	public ContentResource addContent(String bucketName,String parentUniqueId,String email,String name,byte[] content) {
 		Bucket bucket = bucket(bucketName);

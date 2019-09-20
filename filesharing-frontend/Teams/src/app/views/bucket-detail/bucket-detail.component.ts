@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {BucketService} from "../../services/bucket.service";
 import {ActivatedRoute, UrlSegment} from "@angular/router";
 import {ResourceDTO, TeamDTO} from "../../models/models";
@@ -7,9 +7,10 @@ import {SYNC_TYPE, SyncService} from "../../services/sync.service";
 import {TeamService} from "../../services/team.service";
 import {UploadProgressModel} from "../../models/UploadProgressModel";
 import {HttpEventType} from "@angular/common/http";
-import {MatDialog} from "@angular/material/dialog"; // TODO: Aggiunto
+import {MatDialog} from "@angular/material/dialog";
 import {DownloadDialogComponent} from "../../dialog/download-dialog/download-dialog.component";
-import {UploadDialogComponent} from "../../dialog/upload-dialog/upload-dialog.component"; // TODO: Aggiunto
+import {UploadDialogComponent} from "../../dialog/upload-dialog/upload-dialog.component";
+import {MatSnackBar, MatSnackBarConfig} from "@angular/material/snack-bar";
 
 class PathDescriptor{
   path: string;
@@ -19,7 +20,8 @@ class PathDescriptor{
 @Component({
   selector: 'app-bucket-detail',
   templateUrl: './bucket-detail.component.html',
-  styleUrls: ['./bucket-detail.component.scss']
+  styleUrls: ['./bucket-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class BucketDetailComponent implements OnInit {
 
@@ -36,7 +38,9 @@ export class BucketDetailComponent implements OnInit {
               private resourceService: ResourceService,
               private syncService: SyncService,
               private router: ActivatedRoute,
-              public dialog: MatDialog /* TODO: Aggiunto */) { }
+              public snackbar: MatSnackBar,
+              public dialog: MatDialog) {
+  }
 
   ngOnInit() {
     this.router.paramMap.subscribe(params=>{
@@ -98,30 +102,43 @@ export class BucketDetailComponent implements OnInit {
       });
   }
 
-  private uploadFile(file: File, password: string = null){
-    this.resourceService.addContent(this.team, this.bucket, this.urlparams.length>0?this.urlparams[this.urlparams.length-1].path:null, file, password).subscribe((data: UploadProgressModel)=>{
-      console.log(data);
-      if(data.status == HttpEventType.Response.toString()) {
-        this.syncService.sendEvent(SYNC_TYPE.Resource);
-      }else{
-        //upload progress
-      }
+  openSnackBar(message: string, action: string = null) {
+    let config = new MatSnackBarConfig();
+    config.verticalPosition = "bottom";
+    config.horizontalPosition = "center";
+    config.duration = 2000;
+    this.snackbar.open(message, action ? action : undefined, config);
+  }
+
+  private uploadFile(file: File, password: string = null) {
+    this.resourceService.addContent(this.team, this.bucket, this.urlparams.length > 0 ? this.urlparams[this.urlparams.length - 1].path : null, file, password).subscribe((data: UploadProgressModel) => {
+          console.log(data);
+          if (data.status == HttpEventType.Response.toString()) {
+            console.log('Sono nell\'if');
+            this.syncService.sendEvent(SYNC_TYPE.Resource);
+          } else {
+            console.log('Sono nell\'else');
+          }
+        },
+        (error) => {
+          this.openSnackBar('Errore nel caricamento del file!', 'Riprova');
+        });
+  }
+
+  download(file: ResourceDTO) {
+    this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
+  }
+
+  // TODO: Implementare metodo con download file crittografato.
+  downloadCrypt(file: ResourceDTO) {
+    const dialogRef = this.dialog.open(DownloadDialogComponent, {
+      width: '50vw',
+      data: {}
     });
-  }
-
-  // TODO: Aggiunto (modificato)
-  download(file: ResourceDTO){
-      this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
-  }
-
-  downloadCrypt(file: ResourceDTO){
-    const dialogRef = this.dialog.open(DownloadDialogComponent, {width: '50vw',data: {} });
-
-    //Per ora chiude il dialogo e scarica il file comunque (anche se è cifrato)
     dialogRef.afterClosed().subscribe((password: string) => {
       this.resourceService.downloadCrypt(this.team, this.bucket, file.uniqueKey, password).subscribe(()=>{},
           (error) => {
-
+            this.openSnackBar('Errore nel download: Password errata!', 'Riprova');
           }); //Originale
     });
   }
@@ -129,12 +146,4 @@ export class BucketDetailComponent implements OnInit {
   getPathForLink(index){
     return this.urlparams.slice(0,index+1).reduce((initial, item)=>{initial.push(item.path); return initial},[]).join('/');
   }
-
-
-
-// TODO: Rimuovere o implementare metodo
-openDialogPassword(f): void {
-
-}
-
 }

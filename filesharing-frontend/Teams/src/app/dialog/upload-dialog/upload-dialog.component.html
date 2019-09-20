@@ -1,18 +1,26 @@
-<!-- TODO: Componente aggiunto -->
 <mat-dialog-content>
     <form class="form"  #bucketForm="ngForm">
-        <mat-form-field class="example-full-width">
-            <input matInput [type]="hide ? 'password' : 'text'" name="passwordInput" placeholder="Inserisci password (4-32 caratteri)"
-                   required [(ngModel)]="password" minlength="4" maxlength="32">
-            <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Nascondi password'" [attr.aria-pressed]="hide">
-                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <mat-form-field class="example-full-width" [color] = passwordComponent.color>
+            <input matInput [type]="showDetails ? 'text' : 'password'"
+                   name="passwordInput" placeholder="Inserisci password (8-32 caratteri)"
+                   required [(ngModel)]="password" minlength="8" maxlength="32">
+            <button type="button" mat-icon-button matSuffix (click)="showDetails = !showDetails" [attr.aria-label]="'Nascondi password'" [attr.aria-pressed]="showDetails">
+                <mat-icon>{{showDetails ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
         </mat-form-field>
+
+        <span *ngIf="passwordComponent.strength<= 20" class="pwSpan weak">Password debole.</span>
+        <span *ngIf="passwordComponent.strength> 20 && passwordComponent.strength <= 80" class="pwSpan medium">Password buona.</span>
+        <span *ngIf="passwordComponent.strength> 80"class="pwSpan good">Password ottima.</span>
+        <mat-password-strength #passwordComponent
+                               (onStrengthChanged)="onStrengthChanged($event)"
+                               [password]="password">
+        </mat-password-strength>
+        <span style="display:block; height: 10px;"></span>
         <div>
             <button type=submit [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
                     (click)="addWithPassword()">Carica File</button>
             <button type=button style="float: right" mat-flat-button color="secondary" (click)="addFile()">Carica senza password</button>
-            <!-- <button [disabled]="bucketForm.invalid" style="float: right" mat-flat-button color="warn">Crea Bucket</button> -->
         </div>
     </form>
 </mat-dialog-content>
