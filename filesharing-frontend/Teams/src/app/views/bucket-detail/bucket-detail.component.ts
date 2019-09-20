@@ -126,7 +126,7 @@ export class BucketDetailComponent implements OnInit {
           }
         },
         (error) => {
-          this.openSnackBar('Errore nel caricamento del file!', 'Riprova');
+          this.openSnackBar('Errore nel caricamento del file: File già presente!', 'Chiudi');
         });
   }
 
@@ -143,7 +143,7 @@ export class BucketDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe((password: string) => {
       this.resourceService.downloadCrypt(this.team, this.bucket, file.uniqueKey, password).subscribe(()=>{},
           (error) => {
-            this.openSnackBar('Errore nel download: Password errata!', 'Riprova');
+            this.openSnackBar('Errore nel download: Password errata!', 'Chiudi');
           }); //Originale
     });
   }
