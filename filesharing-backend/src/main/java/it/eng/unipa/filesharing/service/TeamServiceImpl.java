@@ -196,6 +196,23 @@ public class TeamServiceImpl implements TeamService{
 		FolderResource folderResource = team.addFolder(bucketName, parentUniqueId, SecurityContext.getEmail(), name);
 		return conversionService.convert(folderResource, ResourceDTO.class);
 	}
+
+
+	public ResourceDTO getCryptedContent (UUID uuid, String bucketName, String uniqueId, String password) {
+		Team team = team(uuid);
+		ContentResource contentResource = team.getContent(SecurityContext.getEmail(),bucketName,uniqueId);
+		ResourceDTO resourceDTO = (ResourceDTO)conversionService.convert(contentResource,TypeDescriptor.valueOf(ContentResource.class), TypeDescriptor.valueOf(ResourceDTO.class));
+		// Decrypting
+		byte[]  decryptedContent = AES.decrypt(contentResource.getContent(), password);
+		resourceDTO.setContent(decryptedContent);
+
+		String fileNameWithoutCrypt = resourceDTO.getName().replace(".crypt", "");
+//		String[] splitted = resourceDTO.getName().split("\\.");
+//		String fileNameWithoutCrypt = StringUtils.join(splitted,".");
+		resourceDTO.setName(fileNameWithoutCrypt);
+
+		return resourceDTO;
+	}
 	
 	@Override
 	public ResourceDTO getContent(UUID uuid, String bucketName, String uniqueId) {

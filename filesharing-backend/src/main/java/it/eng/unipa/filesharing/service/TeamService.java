@@ -43,6 +43,8 @@ public interface TeamService {
 
 	ResourceDTO addFolder(UUID uuid, String bucketName, String parentUniqueId, String name);
 
+	ResourceDTO getCryptedContent (UUID uuid, String bucketName, String uniqueId, String password);
+
 	ResourceDTO getContent(UUID uuid, String bucketName, String uniqueId);
 	
 	

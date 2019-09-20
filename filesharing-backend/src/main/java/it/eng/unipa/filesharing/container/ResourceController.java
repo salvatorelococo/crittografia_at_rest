@@ -10,6 +10,7 @@ import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
 import java.util.UUID;
 
+import it.eng.unipa.filesharing.dto.PasswordDTO;
 import org.assertj.core.util.Files;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -85,10 +86,16 @@ public class ResourceController {
 	 */
 
 	@PostMapping("/{uuid}/{bucketName}/{uniqueId}")
-	public ResponseEntity<Resource> download(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@PathVariable("uniqueId") String uniqueId /**, @RequestBody PasswordDTO passwordDTO**/) {
+	public ResponseEntity<Resource> download(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@PathVariable("uniqueId") String uniqueId, @RequestBody PasswordDTO passwordDTO) {
 		//TODO: se nell'oggetto PasswordDTO è presente la password allora chiamo getCryptedContent altrimenti getContent
-		ResourceDTO resourceDTO = teamService.getContent(uuid,bucketName,uniqueId);
-		return getResponseEntityResource(resourceDTO.getName(), resourceDTO.getContent());
+		if(passwordDTO.getPassword() == null) {
+			ResourceDTO resourceDTO = teamService.getContent(uuid, bucketName, uniqueId);
+			return getResponseEntityResource(resourceDTO.getName(), resourceDTO.getContent());
+		}
+		else {
+			ResourceDTO resourceDTO = teamService.getCryptedContent(uuid, bucketName, uniqueId, passwordDTO.getPassword());
+			return getResponseEntityResource(resourceDTO.getName(), resourceDTO.getContent());
+		}
 	}
 
 	private ResponseEntity<Resource> getResponseEntityResource(String name, byte[] body) {
