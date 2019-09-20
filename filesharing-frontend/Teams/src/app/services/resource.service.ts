@@ -42,7 +42,7 @@ export class ResourceService implements UploadService{
       return null;
     }
 
-    let reg = this.httpClient.post(this.baseUrl+'/'+uuid+'/'+bucketName+'/'+uniqueId, {password}, {responseType: 'arraybuffer', observe: 'response'}).pipe(share());
+    let reg = this.httpClient.post(this.baseUrl+'/'+uuid+'/'+bucketName+'/'+uniqueId, {"password" : password}, {responseType: 'arraybuffer', observe: 'response'}).pipe(share());
 
     reg.subscribe(res => {
       return this.downLoadFile(res);
