@@ -87,7 +87,6 @@ public class ResourceController {
 
 	@PostMapping("/{uuid}/{bucketName}/{uniqueId}")
 	public ResponseEntity<Resource> download(@PathVariable("uuid") UUID uuid,@PathVariable("bucketName") String bucketName,@PathVariable("uniqueId") String uniqueId, @RequestBody PasswordDTO passwordDTO) {
-		//TODO: se nell'oggetto PasswordDTO è presente la password allora chiamo getCryptedContent altrimenti getContent
 		if(passwordDTO.getPassword() == null) {
 			ResourceDTO resourceDTO = teamService.getContent(uuid, bucketName, uniqueId);
 			return getResponseEntityResource(resourceDTO.getName(), resourceDTO.getContent());

@@ -206,6 +206,7 @@ public class TeamServiceImpl implements TeamService{
 		byte[]  decryptedContent = AES.decrypt(contentResource.getContent(), password);
 		resourceDTO.setContent(decryptedContent);
 
+		// TODO: I file criptati contenti ".crypt" all'interno del nome vengono scaricati senza di esso nel nome finale.
 		String fileNameWithoutCrypt = resourceDTO.getName().replace(".crypt", "");
 //		String[] splitted = resourceDTO.getName().split("\\.");
 //		String fileNameWithoutCrypt = StringUtils.join(splitted,".");
