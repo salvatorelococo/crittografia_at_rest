@@ -115,12 +115,11 @@ export class BucketDetailComponent implements OnInit {
   }
 
   downloadCrypt(file: ResourceDTO){
-    const dialogRef = this.dialog.open(DownloadDialogComponent, {
-      width: '50vw',
-      data: {}
-    });
+    const dialogRef = this.dialog.open(DownloadDialogComponent, {width: '50vw',data: {} });
+
+    //Per ora chiude il dialogo e scarica il file comunque (anche se è cifrato)
     dialogRef.afterClosed().subscribe((password: string) => {
-      this.resourceService.download(this.team, this.bucket, file.uniqueKey).subscribe(()=>{},
+      this.resourceService.downloadCrypt(this.team, this.bucket, file.uniqueKey, password).subscribe(()=>{},
           (error) => {
 
           }); //Originale

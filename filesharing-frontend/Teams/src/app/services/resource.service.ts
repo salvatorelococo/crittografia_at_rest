@@ -28,7 +28,21 @@ export class ResourceService implements UploadService{
   }
 
   public download(uuid: string, bucketName: string, uniqueId: string){
-    let reg = this.httpClient.post(this.baseUrl+'/'+uuid+'/'+bucketName+'/'+uniqueId, {}, {responseType: 'arraybuffer', observe: 'response'}).pipe(share());
+    let reg = this.httpClient.post(this.baseUrl+'/'+uuid+'/'+bucketName+'/'+uniqueId, {responseType: 'arraybuffer', observe: 'response'}).pipe(share());
+    reg.subscribe(res => {
+      return this.downLoadFile(res);
+    });
+    return reg;
+  }
+
+  //TODO: downloadCrypt con body
+  public downloadCrypt(uuid: string, bucketName: string, uniqueId: string, password: string = null){
+    let reg = this.httpClient.post(this.baseUrl+'/'+uuid+'/'+bucketName+'/'+uniqueId, {password}, {responseType: 'arraybuffer', observe: 'response'}).pipe(share());
+    //inserita condizione per non far scaricare nulla se non si inserisce la password
+    if(password == null){
+      return null;
+    }
+    // prossimo step: inserire il decrypt N.B. se la psw è errata non deve scaricare nulla
     reg.subscribe(res => {
       return this.downLoadFile(res);
     });
