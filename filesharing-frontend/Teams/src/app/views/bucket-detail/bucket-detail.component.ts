@@ -119,10 +119,7 @@ export class BucketDetailComponent implements OnInit {
     this.resourceService.addContent(this.team, this.bucket, this.urlparams.length > 0 ? this.urlparams[this.urlparams.length - 1].path : null, file, password).subscribe((data: UploadProgressModel) => {
           console.log(data);
           if (data.status == HttpEventType.Response.toString()) {
-            console.log('Sono nell\'if');
             this.syncService.sendEvent(SYNC_TYPE.Resource);
-          } else {
-            console.log('Sono nell\'else');
           }
         },
         (error) => {
@@ -131,7 +128,7 @@ export class BucketDetailComponent implements OnInit {
   }
 
   download(file: ResourceDTO) {
-    this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
+    this.resourceService.download(this.team, this.bucket, file.uniqueKey);
   }
 
   downloadCrypt(file: ResourceDTO) {
