@@ -92,8 +92,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     DownloadDialogComponent
   ],
   bootstrap: [
-      AppComponent,
-      BucketDetailComponent/**/
+      AppComponent
   ]
 })
 export class AppModule { }
