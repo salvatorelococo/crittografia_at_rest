@@ -134,7 +134,6 @@ export class BucketDetailComponent implements OnInit {
     this.resourceService.download(this.team, this.bucket, file.uniqueKey); //Originale
   }
 
-  // TODO: Implementare metodo con download file crittografato.
   downloadCrypt(file: ResourceDTO) {
     const dialogRef = this.dialog.open(DownloadDialogComponent, {
       width: '50vw',

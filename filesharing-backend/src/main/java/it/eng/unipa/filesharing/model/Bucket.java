@@ -59,11 +59,6 @@ public class Bucket {
 	@Convert(converter = BucketTypeConverter.class)
 	private BucketType bucketType;
 
-//	// TODO: Aggiunto
-//	@OneToMany(mappedBy = "bucket", cascade = CascadeType.ALL, orphanRemoval = true)
-//	private List<File> files = new ArrayList<File>();
-
-
 	@OneToMany(mappedBy = "bucket",cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Membership> memberships = new ArrayList<Membership>();
 	
@@ -141,25 +136,6 @@ public class Bucket {
 		ResourceRepository repository = bucketType.getRepository();
 		return repository.loadBucket(this.getTeam().getUuid(), this.getName());
 	}
-
-//    public ContentResource addCryptedContent(String email,String parentUniqueId, String name, byte[] content) {
-//        return execute(email,(member)->{
-//            if(member.isPermissionCreate()) {
-//                ResourceRepository repository = bucketType.getRepository();
-//                Resource parent = parentUniqueId!=null ? repository.read(getBucketResource(),parentUniqueId) : getBucketResource();
-//
-//                // TODO: Aggiunto (PROBLEMA: Il file viene in ogni caso aggiunto alla lista(?) e prima di essere creato)
-//               // File f = new File(this, parentUniqueId, name, hash, salt, iv);
-//               // this.files.add(f);
-//
-//                // TODO: Invocare funzione di criptaggio per il file prima delle creazione del contenuto.
-//                // content = qualcuno.cryptFile(content, hash, iv);
-//                return repository.createContent(parent, name, content);
-//            } else {
-//                return null;
-//            }
-//        });
-//    }
 
 	public ContentResource addContent(String email,String parentUniqueId,String name,byte[] content) {
 		return execute(email,(member)->{

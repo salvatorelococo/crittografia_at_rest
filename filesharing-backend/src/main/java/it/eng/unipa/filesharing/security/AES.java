@@ -1,8 +1,7 @@
 package it.eng.unipa.filesharing.security;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import javax.crypto.Cipher;
@@ -14,7 +13,7 @@ public class AES {
     {
         MessageDigest sha = null;
         try {
-            byte[] key = myKey.getBytes("UTF-8");
+            byte[] key = myKey.getBytes(StandardCharsets.UTF_8);
             sha = MessageDigest.getInstance("SHA-256");
             key = sha.digest(key);
             key = Arrays.copyOf(key, 32);
@@ -53,9 +52,4 @@ public class AES {
         }
     }
 
-//    public static void main(String[] args) {
-//        byte[] crypted = AES.encrypt("Ciao".getBytes(),"pwd1");
-//        byte[] decrypted = AES.decrypt(crypted,"pwd2");
-//        System.out.println(new String(decrypted));
-//    }
 }

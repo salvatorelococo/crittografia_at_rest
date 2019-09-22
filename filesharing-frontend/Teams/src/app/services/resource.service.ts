@@ -35,7 +35,6 @@ export class ResourceService implements UploadService{
     return reg;
   }
 
-  //TODO: downloadCrypt con body
   public downloadCrypt(uuid: string, bucketName: string, uniqueId: string, password: string = null){
 
     if(password == null){

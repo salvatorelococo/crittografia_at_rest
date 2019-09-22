@@ -1,1 +1,0 @@
-C:\Users\miche\IdeaProjects\unipa_2019_gruppo_0\filesharing-frontend\Teams>ng serve --proxy-config src\local_proxy.conf.json
