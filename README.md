@@ -1,2 +1,1 @@
-# unipa_2019_gruppo_0
-Project work di esempio
+# UNIPA 2019 | Crittografia at rest - Gruppo 1
