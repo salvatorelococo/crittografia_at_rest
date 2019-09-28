@@ -1,4 +1,4 @@
-<!-- TODO: Trovare stile e posizione adatti allo spinner! -->
+/* Azione in corso (download/upload) */
 <div *ngIf="showLoading" class="loading">
     <span>{{currentAction}} in corso...</span>
     <span *ngIf="currentAction == 'Upload'"> ({{percentage}}%)</span>
