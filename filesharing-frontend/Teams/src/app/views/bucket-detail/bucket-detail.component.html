@@ -27,9 +27,9 @@
                 </div>
                 <div *ngIf="file.type == 'FOLDER'" class="file-list-item">
                     <p [routerLink]="[file.uniqueKey]" class="flex-1"><mat-icon>folder</mat-icon> {{ file.name }} </p>
-                    <button class="delete-file" (click)="deleteAttachment(i)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
+<!--                    <button class="delete-file" (click)="deleteAttachment(i)">-->
+<!--                        <mat-icon>delete</mat-icon>-->
+<!--                    </button>-->
                 </div>
             </div>
         </div>

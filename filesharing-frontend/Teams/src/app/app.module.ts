@@ -35,6 +35,7 @@ import { DownloadDialogComponent } from './dialog/download-dialog/download-dialo
 import { ExtensionCryptPipe } from './pipe/extension-crypt.pipe';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         _MatMenuDirectivesModule,
         MatMenuModule,
         MatPasswordStrengthModule.forRoot(),
-        MatSnackBarModule/**/
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
     ],
   providers:  [    {
     provide: APP_INITIALIZER,

@@ -1,3 +1,6 @@
+<span mat-dialog-title style="font-size: 1em; line-height: 1.5em">
+    Download del file <em>"{{fileName | extensionCrypt}}"</em>.
+</span>
 <mat-dialog-content>
     <form class="form"  #bucketForm="ngForm">
         <mat-form-field class="example-full-width">
@@ -8,7 +11,8 @@
             </button>
         </mat-form-field>
         <div>
-            <button type=submit id="default" [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
+            <button type="button" class="tertiary-button" style="float: left;" mat-flat-button (click)="close()">Annulla</button>
+            <button type="submit" [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
                     (click)="download()">Scarica File</button>
         </div>
     </form>

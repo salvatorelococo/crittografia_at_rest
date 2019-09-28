@@ -95,7 +95,7 @@ export class BucketDetailComponent implements OnInit {
   uploadFileEvent(file: File){
       const dialogRef = this.dialog.open(UploadDialogComponent, {
         width: '50vw',
-        data: {}
+        data: {fileName: file.name}
       });
       dialogRef.afterClosed().subscribe((password) => {
         if(typeof password == 'number') {
@@ -123,7 +123,7 @@ export class BucketDetailComponent implements OnInit {
           }
         },
         (error) => {
-          this.openSnackBar('Errore nel caricamento del file: File già presente!', 'Chiudi');
+          this.openSnackBar('Errore nel caricamento del file!', 'Chiudi');
         });
   }
 
@@ -134,7 +134,7 @@ export class BucketDetailComponent implements OnInit {
   downloadCrypt(file: ResourceDTO) {
     const dialogRef = this.dialog.open(DownloadDialogComponent, {
       width: '50vw',
-      data: {}
+      data: {fileName: file.name}
     });
     dialogRef.afterClosed().subscribe((password: string) => {
       this.resourceService.downloadCrypt(this.team, this.bucket, file.uniqueKey, password).subscribe(()=>{},

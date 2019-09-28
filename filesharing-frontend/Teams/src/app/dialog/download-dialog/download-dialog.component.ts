@@ -8,17 +8,21 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class DownloadDialogComponent implements OnInit {
 
+  constructor(public dialogRef: MatDialogRef<DownloadDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  fileName = this.data.fileName;
   password: string;
   hide = true;
-
-  constructor(public dialogRef: MatDialogRef<DownloadDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
   }
 
   download() {
     this.dialogRef.close(this.password);
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 
 }

@@ -1,3 +1,6 @@
+<span mat-dialog-title style="font-size: 1em; line-height: 1.5em">
+    Upload del file <em>"{{fileName}}</em>".
+</span>
 <mat-dialog-content>
     <form class="form"  #bucketForm="ngForm">
         <mat-form-field class="example-full-width" [color] = passwordComponent.color>
@@ -9,18 +12,19 @@
             </button>
         </mat-form-field>
 
-        <span *ngIf="passwordComponent.strength<= 20" class="pwSpan weak">Password debole.</span>
-        <span *ngIf="passwordComponent.strength> 20 && passwordComponent.strength <= 80" class="pwSpan medium">Password buona.</span>
-        <span *ngIf="passwordComponent.strength> 80"class="pwSpan good">Password ottima.</span>
+        <span *ngIf="passwordComponent.strength<= 20" class="pwSpan warn-color">Password debole.</span>
+        <span *ngIf="passwordComponent.strength> 20 && passwordComponent.strength <= 80" class="pwSpan accent-color">Password buona.</span>
+        <span *ngIf="passwordComponent.strength> 80" class="pwSpan primary-color">Password ottima.</span>
         <mat-password-strength #passwordComponent
                                (onStrengthChanged)="onStrengthChanged($event)"
                                [password]="password">
         </mat-password-strength>
-        <span style="display:block; height: 10px;"></span>
+        <span style="display:block; height: 30px;"></span>
         <div>
-            <button type=submit [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
+            <button type="button" class="tertiary-button" style="float: left;"  mat-flat-button (click)="close()">Annulla</button>
+            <button type="submit" [disabled]="bucketForm.invalid || bucketForm.pristine" style="float: right" mat-flat-button color="primary"
                     (click)="addWithPassword()">Carica File</button>
-            <button type=button style="float: right" mat-flat-button color="secondary" (click)="addFile()">Carica senza password</button>
+            <button type="button" mat-flat-button class="secondary-button" style="float: right;" (click)="addFile()">Carica senza password</button>
         </div>
     </form>
 </mat-dialog-content>

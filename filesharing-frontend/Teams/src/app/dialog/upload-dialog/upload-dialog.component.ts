@@ -8,14 +8,15 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class UploadDialogComponent implements OnInit {
 
+  constructor(public dialogRef: MatDialogRef<UploadDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  fileName = this.data.fileName;
   password: string;
   showDetails: boolean = false;
 
   ngOnInit() {
   }
 
-  constructor(public dialogRef: MatDialogRef<UploadDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   onStrengthChanged(strength: number) {
     console.log('password strength = ', strength);
@@ -27,5 +28,9 @@ export class UploadDialogComponent implements OnInit {
 
   addFile() {
     this.dialogRef.close(-1);
+  }
+
+  close() {
+    this.dialogRef.close(null);
   }
 }
