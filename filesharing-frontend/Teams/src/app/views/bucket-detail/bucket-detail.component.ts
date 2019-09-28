@@ -32,6 +32,7 @@ export class BucketDetailComponent implements OnInit {
   public teamDTO: TeamDTO;
   public urlparams: UrlSegment[] = [];
   public folderList: PathDescriptor[];
+  public showSpinner: boolean = false;
 
   constructor(private teamService: TeamService,
               private bucketService: BucketService,
@@ -111,7 +112,7 @@ export class BucketDetailComponent implements OnInit {
     let config = new MatSnackBarConfig();
     config.verticalPosition = "bottom";
     config.horizontalPosition = "center";
-    config.duration = 2000;
+    config.duration = 3000;
     this.snackbar.open(message, action ? action : undefined, config);
   }
 
@@ -120,15 +121,27 @@ export class BucketDetailComponent implements OnInit {
           console.log(data);
           if (data.status == HttpEventType.Response.toString()) {
             this.syncService.sendEvent(SYNC_TYPE.Resource);
+            this.showSpinner = false;
+          }
+          else {
+            this.showSpinner = true;
           }
         },
         (error) => {
+          this.showSpinner = false;
           this.openSnackBar('Errore nel caricamento del file!', 'Chiudi');
         });
   }
 
   download(file: ResourceDTO) {
-    this.resourceService.download(this.team, this.bucket, file.uniqueKey);
+      this.showSpinner = true;
+    this.resourceService.download(this.team, this.bucket, file.uniqueKey).subscribe(()=>{
+            this.showSpinner = false;
+        },
+        (error) => {
+            this.showSpinner = false;
+            this.openSnackBar('Errore nel download del file!', 'Chiudi');
+        }); //Originale);
   }
 
   downloadCrypt(file: ResourceDTO) {
@@ -137,8 +150,12 @@ export class BucketDetailComponent implements OnInit {
       data: {fileName: file.name}
     });
     dialogRef.afterClosed().subscribe((password: string) => {
-      this.resourceService.downloadCrypt(this.team, this.bucket, file.uniqueKey, password).subscribe(()=>{},
+      this.showSpinner = true;
+      this.resourceService.downloadCrypt(this.team, this.bucket, file.uniqueKey, password).subscribe(()=>{
+            this.showSpinner = false;
+            },
           (error) => {
+            this.showSpinner = false;
             this.openSnackBar('Errore nel download: Password errata!', 'Chiudi');
           }); //Originale
     });

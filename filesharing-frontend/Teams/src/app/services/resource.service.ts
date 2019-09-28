@@ -36,7 +36,6 @@ export class ResourceService implements UploadService{
   }
 
   public downloadCrypt(uuid: string, bucketName: string, uniqueId: string, password: string = null){
-
     if(password == null){
       return null;
     }

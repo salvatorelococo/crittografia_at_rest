@@ -1,3 +1,6 @@
+<mat-card *ngIf="showSpinner">
+    <mat-spinner color="primary"></mat-spinner>
+</mat-card>
 <div style="display: flex;">
     <p class="breadcrumb" [routerLink]="['/'+team+'/'+bucket]">/{{bucket}}</p><p class="breadcrumb" [routerLink]="['/'+team+'/'+bucket+'/'+getPathForLink(i)]" *ngFor="let path of folderList; let i = index;">/{{path.path}}</p>
 </div>
