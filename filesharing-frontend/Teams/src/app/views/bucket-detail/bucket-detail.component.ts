@@ -32,7 +32,9 @@ export class BucketDetailComponent implements OnInit {
   public teamDTO: TeamDTO;
   public urlparams: UrlSegment[] = [];
   public folderList: PathDescriptor[];
-  public showSpinner: boolean = false;
+  public showLoading: boolean = false;
+  public percentage: number;
+  public currentAction: string = 'Nessuna azione';
 
   constructor(private teamService: TeamService,
               private bucketService: BucketService,
@@ -117,31 +119,36 @@ export class BucketDetailComponent implements OnInit {
   }
 
   private uploadFile(file: File, password: string = null) {
+    this.currentAction = "Upload";
+    this.percentage = 0;
     this.resourceService.addContent(this.team, this.bucket, this.urlparams.length > 0 ? this.urlparams[this.urlparams.length - 1].path : null, file, password).subscribe((data: UploadProgressModel) => {
           console.log(data);
           if (data.status == HttpEventType.Response.toString()) {
             this.syncService.sendEvent(SYNC_TYPE.Resource);
-            this.showSpinner = false;
+            this.showLoading = false;
           }
           else {
-            this.showSpinner = true;
+            this.percentage = data.percentage;
+            this.showLoading = true;
           }
         },
         (error) => {
-          this.showSpinner = false;
+          this.showLoading = false;
           this.openSnackBar('Errore nel caricamento del file!', 'Chiudi');
         });
   }
 
   download(file: ResourceDTO) {
-      this.showSpinner = true;
+    this.currentAction = "Download";
+    /* Viene mostrato lo spinner fin tanto che non viene caricato il file o restituito errore */
+    this.showLoading = true;
     this.resourceService.download(this.team, this.bucket, file.uniqueKey).subscribe(()=>{
-            this.showSpinner = false;
-        },
+      this.showLoading = false;
+      },
         (error) => {
-            this.showSpinner = false;
-            this.openSnackBar('Errore nel download del file!', 'Chiudi');
-        }); //Originale);
+      this.showLoading = false;
+      this.openSnackBar('Errore nel download del file!', 'Chiudi');
+    });
   }
 
   downloadCrypt(file: ResourceDTO) {
@@ -150,14 +157,20 @@ export class BucketDetailComponent implements OnInit {
       data: {fileName: file.name}
     });
     dialogRef.afterClosed().subscribe((password: string) => {
-      this.showSpinner = true;
-      this.resourceService.downloadCrypt(this.team, this.bucket, file.uniqueKey, password).subscribe(()=>{
-            this.showSpinner = false;
+        /* password == null quando si annulla il download */
+        if (password == null) {
+            return null;
+        }
+        /* Viene mostrato lo spinner fin tanto che non viene caricato il file o restituito un errore */
+        this.currentAction = "Download";
+        this.showLoading = true;
+        this.resourceService.downloadCrypt(this.team, this.bucket, file.uniqueKey, password).subscribe(()=>{
+            this.showLoading = false;
             },
-          (error) => {
-            this.showSpinner = false;
+            (error) => {
+            this.showLoading = false;
             this.openSnackBar('Errore nel download: Password errata!', 'Chiudi');
-          }); //Originale
+          });
     });
   }
 

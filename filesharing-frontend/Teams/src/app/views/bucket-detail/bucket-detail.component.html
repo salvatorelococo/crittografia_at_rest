@@ -1,6 +1,9 @@
-<mat-card *ngIf="showSpinner">
-    <mat-spinner color="primary"></mat-spinner>
-</mat-card>
+<!-- TODO: Trovare stile e posizione adatti allo spinner! -->
+<div *ngIf="showLoading" class="loading">
+    <span>{{currentAction}} in corso...</span>
+    <span *ngIf="currentAction == 'Upload'"> ({{percentage}}%)</span>
+</div>
+
 <div style="display: flex;">
     <p class="breadcrumb" [routerLink]="['/'+team+'/'+bucket]">/{{bucket}}</p><p class="breadcrumb" [routerLink]="['/'+team+'/'+bucket+'/'+getPathForLink(i)]" *ngFor="let path of folderList; let i = index;">/{{path.path}}</p>
 </div>
@@ -17,6 +20,9 @@
                     <button class="delete-file" (click)="download(file)">
                         <mat-icon>cloud_download</mat-icon>
                     </button>
+<!--                    <button class="delete-file" (click)="deleteAttachment(i)">-->
+<!--                        <mat-icon>delete</mat-icon>-->
+<!--                    </button>-->
                 </div>
                 <div *ngIf="file.type == 'CONTENT' && file.name != (file.name | extensionCrypt)" class="file-list-item">
                     <p class="flex-1" (click)="downloadCrypt(file)" >
@@ -27,6 +33,9 @@
                     <button class="delete-file" (click)="downloadCrypt(file)">
                         <mat-icon>cloud_download</mat-icon>
                     </button>
+<!--                    <button class="delete-file" (click)="deleteAttachment(i)">-->
+<!--                        <mat-icon>delete</mat-icon>-->
+<!--                    </button>-->
                 </div>
                 <div *ngIf="file.type == 'FOLDER'" class="file-list-item">
                     <p [routerLink]="[file.uniqueKey]" class="flex-1"><mat-icon>folder</mat-icon> {{ file.name }} </p>
